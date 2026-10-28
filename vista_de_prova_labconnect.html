@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vista de Prova — LabConnect | Banco de Dados</title>
+<style>
+:root{--ink:#17243d;--blue:#2454ac;--teal:#0e817e;--surface:#fff;--bg:#f3f6fb;--muted:#60708a;--line:#d8e1ef;--code:#142136;--gold:#fbf1cf}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,Segoe UI,sans-serif}header{background:linear-gradient(117deg,#142540,#214e89 75%,#137e89);color:white;padding:52px 20px 42px} .wrap{max-width:1100px;margin:auto;padding:0 22px} .eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:.78rem;font-weight:800;opacity:.85}h1{font-size:clamp(2rem,5vw,3.1rem);line-height:1.1;margin:.5rem 0}header p{max-width:740px;color:#e2ebff}nav{background:white;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}nav .wrap{display:flex;gap:9px;overflow-x:auto;padding-top:9px;padding-bottom:9px}nav a{white-space:nowrap;text-decoration:none;font-size:.85rem;font-weight:700;color:#264a79;background:#edf3fc;padding:8px 12px;border-radius:8px}main{padding-top:30px;padding-bottom:60px}.section{background:white;border:1px solid var(--line);border-radius:18px;padding:28px;margin:23px 0;box-shadow:0 7px 20px #152f5a09}h2{font-size:1.48rem;margin:0 0 15px}h3{font-size:1.1rem;margin:26px 0 8px;color:#1e4b89}p{margin:9px 0} .pill{display:inline-block;background:#daf4ef;color:#065a56;padding:3px 12px;border-radius:30px;font-size:.78rem;font-weight:800}.lead{font-size:1.04rem;color:#445570}.note{padding:15px 18px;background:#ecf5fe;border-left:4px solid var(--blue);border-radius:8px}.warning{background:#fff7df;border-left-color:#d49719}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:13px}.tile{padding:17px;background:#f5f8fd;border:1px solid var(--line);border-radius:12px}.tile b{color:#174781}.tile span{display:block;color:var(--muted);font-size:.88rem}.diagram{width:100%;overflow-x:auto;background:#fafcff;border:1px solid var(--line);border-radius:10px;padding:12px}.diagram svg{min-width:800px;width:100%;height:auto}table{width:100%;border-collapse:collapse;margin:17px 0;font-size:.94rem}th,td{padding:11px 12px;border:1px solid var(--line);text-align:left;vertical-align:top}th{background:#eaf1fb;color:#1b437d}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.88em}pre{padding:20px;overflow:auto;background:var(--code);color:#e6f2ff;border-radius:12px;max-height:640px;font-size:.83rem;line-height:1.6}button{appearance:none;border:0;border-radius:9px;background:#2460b3;color:white;padding:10px 16px;font:inherit;font-weight:700;cursor:pointer}button.secondary{background:#e7eef9;color:#234776} .tools{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}details{border:1px solid var(--line);border-radius:12px;margin:12px 0;background:#fbfdff}summary{cursor:pointer;padding:15px 19px;font-weight:750}details .inside{padding:0 19px 20px}.quiz{margin:12px 0;border-left:3px solid #2d72ba;padding:8px 15px;background:#f6faff}.footer{color:var(--muted);text-align:center;font-size:.84rem;margin-top:25px}.schema{font-size:.91rem}.schema code{white-space:nowrap}ul li{margin-bottom:6px} @media print{body{background:white;font-size:11pt}header{background:white;color:#17243d;padding:0 0 15px;border-bottom:3px solid #224b8b}header p{color:#344}nav,.tools,button{display:none!important}.wrap{max-width:none}.section{border:none;box-shadow:none;padding:10px 0;break-inside:auto}.diagram svg{min-width:0}h2,h3,table,pre{break-inside:avoid}pre{white-space:pre-wrap;overflow:visible;max-height:none;color:#111;background:#f2f4f8;border:1px solid #ddd;font-size:8pt}details{break-inside:avoid}details .inside{display:block}.footer{display:none}a{color:inherit}}
+</style></head><body>
+<header><div class="wrap"><div class="eyebrow">Banco de Dados · Resolução comentada · Questão 1 (15 pontos)</div><h1>Vista de Prova: LabConnect</h1><p>Da planilha desorganizada ao banco relacional: DER, 1FN–3FN, modelo lógico, integridade referencial e SQL MySQL com dados e consulta final.</p><span class="pill">Gabarito orientativo para revisão em sala</span></div></header>
+<nav><div class="wrap"><a href="#enunciado">Problema</a><a href="#der">DER</a><a href="#normalizacao">Normalização</a><a href="#modelo">Modelo lógico</a><a href="#sql">SQL completo</a><a href="#resultado">Resultado</a><a href="#erros">Erros comuns</a><a href="#criterios">Correção</a></div></nav>
+<main class="wrap"><section class="section" id="enunciado"><h2>1. Entendendo a situação-problema</h2><p>A universidade controla oficinas, professores, laboratórios, equipamentos e participantes em uma única planilha. Isso gera dados repetidos e campos com listas como “Arduino; Sensor; Motor”. Nossa tarefa é separar corretamente os conceitos e relacioná-los.</p><div class="grid"><div class="tile"><b>5 entidades principais</b><span>Professor, Laboratório, Oficina, Equipamento, Participante</span></div><div class="tile"><b>2 tabelas associativas</b><span>Oficina_Equipamento e Oficina_Participante</span></div><div class="tile"><b>7 tabelas ao final</b><span>Estrutura relacional sugerida em 3FN</span></div></div><div class="note warning"><b>Observação:</b> o enunciado não exige nomes de atributos ou identificadores exatamente iguais aos deste gabarito. Outras soluções equivalentes são válidas se respeitarem as regras de negócio.</div></section>
+<section class="section" id="der"><h2>2. DER — entidades e cardinalidades</h2><p>Diagrama abaixo em estilo lógico simplificado. <b>PK</b> identifica a chave primária; <b>FK</b>, a chave estrangeira. As duas relações N:N foram resolvidas por entidades associativas.</p>
+<div class="diagram"><svg viewBox="0 0 1000 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="DER com Professor e Laboratório ligados a Oficina em 1 para muitos e Oficina conectada a Equipamento e Participante por tabelas de associação">
+<defs><style>.s{fill:#fff;stroke:#b7cce8;stroke-width:2}.hd{fill:#25549a}.ht{fill:#fff;font:700 18px sans-serif}.tx{fill:#24344f;font:15px sans-serif}.ln{fill:none;stroke:#12817b;stroke-width:2.8;stroke-linejoin:round}.card{fill:#075c59;font:700 16px sans-serif}.p{fill:#e9f3ff;stroke:#88addd;stroke-width:2}</style></defs>
+<path class="ln" d="M250 103 H370 V223 H395"/><path class="ln" d="M760 103 H635 V223 H605"/><path class="ln" d="M500 331 V370 H258 V415"/><path class="ln" d="M258 522 V555 H125 V574"/><path class="ln" d="M500 331 V370 H755 V415"/><path class="ln" d="M755 522 V555 H870 V574"/>
+<g transform="translate(30 30)"><rect class="s" width="220" height="160" rx="9"/><path class="hd" d="M9 0 H211 Q220 0 220 9 V43 H0 V9 Q0 0 9 0"/><text class="ht" x="13" y="28">PROFESSOR</text><text class="tx" x="13" y="70">PK id_professor</text><text class="tx" x="13" y="94">cpf (único)</text><text class="tx" x="13" y="118">nome</text><text class="tx" x="13" y="142">email (único)</text></g>
+<g transform="translate(760 30)"><rect class="s" width="220" height="130" rx="9"/><path class="hd" d="M9 0 H211 Q220 0 220 9 V43 H0 V9 Q0 0 9 0"/><text class="ht" x="13" y="28">LABORATÓRIO</text><text class="tx" x="13" y="73">PK id_laboratorio</text><text class="tx" x="13" y="99">nome</text></g>
+<g transform="translate(395 190)"><rect class="s" width="210" height="161" rx="9"/><path class="hd" d="M9 0 H201 Q210 0 210 9 V43 H0 V9 Q0 0 9 0"/><text class="ht" x="13" y="28">OFICINA</text><text class="tx" x="12" y="66">PK id_oficina</text><text class="tx" x="12" y="88">nome, data_oficina</text><text class="tx" x="12" y="110">carga_horaria</text><text class="tx" x="12" y="132">FK id_professor</text><text class="tx" x="12" y="153">FK id_laboratorio</text></g>
+<g transform="translate(125 415)"><rect class="p" width="265" height="107" rx="9"/><text class="tx" x="13" y="29" style="font-weight:700">OFICINA_EQUIPAMENTO</text><text class="tx" x="13" y="58">PK/FK id_oficina</text><text class="tx" x="13" y="83">PK/FK id_equipamento</text></g>
+<g transform="translate(635 415)"><rect class="p" width="270" height="107" rx="9"/><text class="tx" x="13" y="29" style="font-weight:700">OFICINA_PARTICIPANTE</text><text class="tx" x="13" y="58">PK/FK id_oficina</text><text class="tx" x="13" y="83">PK/FK id_participante</text></g>
+<g transform="translate(15 574)"><rect class="s" width="270" height="61" rx="9"/><text class="tx" x="12" y="25" style="font-weight:700">EQUIPAMENTO</text><text class="tx" x="12" y="47">id, descrição, patrimônio único</text></g>
+<g transform="translate(715 574)"><rect class="s" width="270" height="61" rx="9"/><text class="tx" x="12" y="25" style="font-weight:700">PARTICIPANTE</text><text class="tx" x="12" y="47">id, cpf, nome, email</text></g>
+<text class="card" x="255" y="94">1</text><text class="card" x="372" y="213">N</text><text class="card" x="742" y="94">1</text><text class="card" x="614" y="213">N</text><text class="card" x="508" y="364">1</text><text class="card" x="264" y="405">N</text><text class="card" x="764" y="405">N</text><text class="card" x="134" y="563">1</text><text class="card" x="862" y="563">1</text>
+</svg></div>
+<table><thead><tr><th>Regra do enunciado</th><th>Cardinalidade</th><th>Como implementar</th></tr></thead><tbody><tr><td>Um professor ministra várias oficinas; cada oficina tem um professor.</td><td>Professor 1:N Oficina</td><td><code>oficina.id_professor</code> (FK)</td></tr><tr><td>Um laboratório recebe várias oficinas; cada oficina ocorre em um laboratório.</td><td>Laboratório 1:N Oficina</td><td><code>oficina.id_laboratorio</code> (FK)</td></tr><tr><td>Uma oficina usa vários equipamentos; um equipamento pode estar em várias oficinas.</td><td>Oficina N:N Equipamento</td><td><code>oficina_equipamento</code></td></tr><tr><td>Uma oficina tem vários participantes; um participante pode frequentar várias oficinas.</td><td>Oficina N:N Participante</td><td><code>oficina_participante</code></td></tr></tbody></table><p class="note"><b>Detalhe importante:</b> um N:N é representável diretamente em um <em>DER conceitual</em>, mas ao transformar para tabelas relacionais é necessário criar uma tabela associativa.</p></section>
+<section class="section" id="normalizacao"><h2>3. Normalização: da planilha à 3FN</h2><h3>1FN — Primeira Forma Normal</h3><p>Um campo deve conter <b>um valor atômico</b>, e não uma lista. Em vez de gravar <code>"Arduino; Sensor; Motor"</code> em uma única célula de equipamentos, cada associação entre uma oficina e um equipamento será registrada individualmente. A mesma regra vale para participantes.</p><h3>2FN — Segunda Forma Normal</h3><p>Além de estar na 1FN, cada atributo não-chave deve depender de <b>toda a chave candidata</b>, não apenas de parte de uma chave composta. Em associações como <code>(id_oficina, id_equipamento)</code>, não devemos guardar <code>nome_oficina</code> ou <code>descricao_equipamento</code>: esses atributos dependem somente de um dos IDs, não do par completo.</p><h3>3FN — Terceira Forma Normal</h3><p>Além da 2FN, removemos dependências transitivas de atributos não-chave em relação às chaves. Por exemplo, <code>id_oficina → id_professor → nome_professor</code>. Assim, nome e e-mail ficam na tabela <code>professor</code>; a oficina conserva apenas <code>id_professor</code>.</p><table><thead><tr><th>Problema da planilha</th><th>Correção</th><th>Benefício</th></tr></thead><tbody><tr><td>Professor e e-mail repetidos por oficina</td><td>Tabela <code>professor</code> + FK em <code>oficina</code></td><td>Atualização em um único lugar</td></tr><tr><td>Equipamentos em texto separado por “;”</td><td><code>equipamento</code> + <code>oficina_equipamento</code></td><td>Relação pesquisável e sem listas</td></tr><tr><td>Participantes no mesmo campo</td><td><code>participante</code> + <code>oficina_participante</code></td><td>CPF, nome e e-mail próprios</td></tr><tr><td>Nome do laboratório duplicado</td><td><code>laboratorio</code> + FK em <code>oficina</code></td><td>Evita inconsistências</td></tr></tbody></table></section>
+<section class="section" id="modelo"><h2>4. Modelo relacional final</h2><p>As tabelas abaixo são o resultado da conversão do DER para o modelo lógico e físico.</p><table class="schema"><thead><tr><th>Tabela</th><th>Campos e chaves</th></tr></thead><tbody><tr><td><b>professor</b></td><td><code>id_professor PK, cpf UNIQUE, nome, email UNIQUE</code></td></tr><tr><td><b>participante</b></td><td><code>id_participante PK, cpf UNIQUE, nome, email UNIQUE</code></td></tr><tr><td><b>laboratorio</b></td><td><code>id_laboratorio PK, nome UNIQUE</code></td></tr><tr><td><b>equipamento</b></td><td><code>id_equipamento PK, descricao, numero_patrimonio UNIQUE</code></td></tr><tr><td><b>oficina</b></td><td><code>id_oficina PK, nome, data_oficina, carga_horaria CHECK (&gt; 0), id_professor FK, id_laboratorio FK</code></td></tr><tr><td><b>oficina_equipamento</b></td><td><code>id_oficina PK/FK, id_equipamento PK/FK</code></td></tr><tr><td><b>oficina_participante</b></td><td><code>id_oficina PK/FK, id_participante PK/FK</code></td></tr></tbody></table><div class="note">A chave primária composta das tabelas associativas impede que a mesma pessoa seja vinculada duas vezes à mesma oficina, ou que um mesmo equipamento seja associado duas vezes a ela. As FKs impedem referências a registros inexistentes.</div></section>
+<section class="section" id="sql"><h2>5. SQL MySQL — solução completa e executável</h2><p>O script cria as sete tabelas, aplica <code>AUTO_INCREMENT</code>, <code>PRIMARY KEY</code>, <code>FOREIGN KEY</code>, <code>NOT NULL</code>, <code>UNIQUE</code> e <code>CHECK</code>, cadastra dados de teste e executa a consulta final. Recomendado: MySQL 8.0.16 ou superior para aplicação efetiva de <code>CHECK</code>.</p><div class="tools"><button onclick="copySql()" id="copyBtn">Copiar SQL completo</button><button class="secondary" onclick="window.print()">Imprimir / Salvar PDF</button></div><pre><code id="sqlCode">CREATE DATABASE IF NOT EXISTS labconnect
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE labconnect;
+
+CREATE TABLE professor (
+  id_professor INT AUTO_INCREMENT PRIMARY KEY,
+  cpf CHAR(11) NOT NULL UNIQUE,
+  nome VARCHAR(120) NOT NULL,
+  email VARCHAR(150) NOT NULL UNIQUE
+);
+
+CREATE TABLE participante (
+  id_participante INT AUTO_INCREMENT PRIMARY KEY,
+  cpf CHAR(11) NOT NULL UNIQUE,
+  nome VARCHAR(120) NOT NULL,
+  email VARCHAR(150) NOT NULL UNIQUE
+);
+
+CREATE TABLE laboratorio (
+  id_laboratorio INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE equipamento (
+  id_equipamento INT AUTO_INCREMENT PRIMARY KEY,
+  descricao VARCHAR(160) NOT NULL,
+  numero_patrimonio VARCHAR(40) NOT NULL UNIQUE
+);
+
+CREATE TABLE oficina (
+  id_oficina INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(160) NOT NULL,
+  data_oficina DATE NOT NULL,
+  carga_horaria INT NOT NULL,
+  id_professor INT NOT NULL,
+  id_laboratorio INT NOT NULL,
+  CONSTRAINT chk_carga_horaria CHECK (carga_horaria &gt; 0),
+  CONSTRAINT fk_oficina_professor FOREIGN KEY (id_professor)
+    REFERENCES professor(id_professor),
+  CONSTRAINT fk_oficina_laboratorio FOREIGN KEY (id_laboratorio)
+    REFERENCES laboratorio(id_laboratorio)
+);
+
+CREATE TABLE oficina_equipamento (
+  id_oficina INT NOT NULL,
+  id_equipamento INT NOT NULL,
+  PRIMARY KEY (id_oficina, id_equipamento),
+  FOREIGN KEY (id_oficina) REFERENCES oficina(id_oficina),
+  FOREIGN KEY (id_equipamento) REFERENCES equipamento(id_equipamento)
+);
+
+CREATE TABLE oficina_participante (
+  id_oficina INT NOT NULL,
+  id_participante INT NOT NULL,
+  PRIMARY KEY (id_oficina, id_participante),
+  FOREIGN KEY (id_oficina) REFERENCES oficina(id_oficina),
+  FOREIGN KEY (id_participante) REFERENCES participante(id_participante)
+);
+
+-- Dados de exemplo (CPFs fictícios de teste)
+INSERT INTO professor (cpf, nome, email) VALUES
+(&#x27;11111111111&#x27;, &#x27;Ana Souza&#x27;, &#x27;ana@una.edu.br&#x27;),
+(&#x27;22222222222&#x27;, &#x27;Marcos Lima&#x27;, &#x27;marcos@una.edu.br&#x27;);
+
+INSERT INTO participante (cpf, nome, email) VALUES
+(&#x27;33333333333&#x27;, &#x27;Carla Mendes&#x27;, &#x27;carla@example.com&#x27;),
+(&#x27;44444444444&#x27;, &#x27;Pedro Alves&#x27;, &#x27;pedro@example.com&#x27;);
+
+INSERT INTO laboratorio (nome) VALUES (&#x27;Lab. Maker&#x27;), (&#x27;Lab. IA&#x27;);
+
+INSERT INTO equipamento (descricao, numero_patrimonio) VALUES
+(&#x27;Arduino&#x27;, &#x27;PAT-001&#x27;), (&#x27;Sensor&#x27;, &#x27;PAT-002&#x27;),
+(&#x27;Motor&#x27;, &#x27;PAT-003&#x27;), (&#x27;ESP32&#x27;, &#x27;PAT-004&#x27;),
+(&#x27;GPU&#x27;, &#x27;PAT-005&#x27;), (&#x27;Notebook&#x27;, &#x27;PAT-006&#x27;);
+
+INSERT INTO oficina (nome, data_oficina, carga_horaria, id_professor, id_laboratorio) VALUES
+(&#x27;Introdução à Robótica&#x27;, &#x27;2026-11-03&#x27;, 3, 1, 1),
+(&#x27;IoT com ESP32&#x27;, &#x27;2026-11-05&#x27;, 4, 2, 1),
+(&#x27;Introdução à IA&#x27;, &#x27;2026-11-10&#x27;, 3, 1, 2);
+
+INSERT INTO oficina_equipamento (id_oficina, id_equipamento) VALUES
+(1,1),(1,2),(1,3),(2,4),(2,2),(3,5),(3,6);
+
+INSERT INTO oficina_participante (id_oficina, id_participante) VALUES
+(1,1),(1,2),(2,2),(3,1);
+
+-- Consulta pedida: uma linha por oficina, reunindo os equipamentos
+SELECT
+  o.nome AS oficina,
+  p.nome AS professor,
+  l.nome AS laboratorio,
+  COALESCE(
+    GROUP_CONCAT(DISTINCT e.descricao ORDER BY e.descricao SEPARATOR &#x27;, &#x27;),
+    &#x27;Nenhum equipamento&#x27;
+  ) AS equipamentos
+FROM oficina AS o
+JOIN professor AS p ON p.id_professor = o.id_professor
+JOIN laboratorio AS l ON l.id_laboratorio = o.id_laboratorio
+LEFT JOIN oficina_equipamento AS oe ON oe.id_oficina = o.id_oficina
+LEFT JOIN equipamento AS e ON e.id_equipamento = oe.id_equipamento
+GROUP BY o.id_oficina, o.nome, p.nome, l.nome
+ORDER BY o.id_oficina;</code></pre><div class="note warning">Para repetir o script no mesmo banco sem conflito, apague antes o banco <code>labconnect</code> de testes ou ajuste os identificadores e inserts. <b>Não</b> execute comandos destrutivos em bancos de produção.</div></section>
+<section class="section" id="resultado"><h2>6. Resultado esperado da consulta</h2><p>Uma linha por oficina. <code>GROUP_CONCAT</code> reúne descrições vindas de múltiplas linhas; <code>LEFT JOIN</code> preserva uma oficina mesmo se ela ainda não tiver equipamento associado.</p><table><thead><tr><th>Oficina</th><th>Professor</th><th>Laboratório</th><th>Equipamentos</th></tr></thead><tbody><tr><td>Introdução à Robótica</td><td>Ana Souza</td><td>Lab. Maker</td><td>Arduino, Motor, Sensor</td></tr><tr><td>IoT com ESP32</td><td>Marcos Lima</td><td>Lab. Maker</td><td>ESP32, Sensor</td></tr><tr><td>Introdução à IA</td><td>Ana Souza</td><td>Lab. IA</td><td>GPU, Notebook</td></tr></tbody></table><p class="lead">Importante: <code>GROUP_CONCAT</code> cria uma apresentação resumida na <b>consulta</b>; não significa voltar a armazenar valores múltiplos em uma coluna da tabela.</p></section>
+<section class="section" id="erros"><h2>7. Erros frequentes e como corrigir</h2><details open><summary>Confundir 1:N com N:N</summary><div class="inside">Uma oficina tem um único professor e um único laboratório, portanto as FKs pertencem a <code>oficina</code>. Já oficinas e equipamentos, assim como oficinas e participantes, são N:N: exigem duas tabelas associativas.</div></details><details><summary>Colocar <code>id_oficina</code> diretamente em participante ou equipamento</summary><div class="inside">Isso limita cada participante ou equipamento a apenas uma oficina, contradizendo as regras de negócio.</div></details><details><summary>Escrever <code>INSERT</code> dentro do <code>CREATE TABLE</code></summary><div class="inside"><code>CREATE TABLE</code> define colunas e restrições. <code>INSERT INTO</code> é um comando separado, usado para registrar linhas depois que a tabela existe.</div></details><details><summary>Declarar o nome da tabela como chave primária</summary><div class="inside">Uma PK é uma <b>coluna</b> ou conjunto de colunas: <code>id_oficina INT AUTO_INCREMENT PRIMARY KEY</code>, por exemplo.</div></details><details><summary>Fazer JOIN diretamente de oficina para equipamento</summary><div class="inside">O caminho certo é <code>oficina → oficina_equipamento → equipamento</code>. A consulta final precisa dessa tabela intermediária.</div></details><details><summary>Descrever a 2FN ou a 3FN apenas como “separar tabelas”</summary><div class="inside">A 2FN trata de dependências <em>parciais</em> da chave; a 3FN elimina dependências <em>transitivas</em>. É importante justificar com exemplos dos próprios dados.</div></details></section>
+<section class="section" id="criterios"><h2>8. Roteiro de correção — sugestão de distribuição (15 pontos)</h2><table><thead><tr><th>Critério</th><th>Pontuação</th><th>O que verificar</th></tr></thead><tbody><tr><td>DER e cardinalidades</td><td>4,0</td><td>5 entidades, atributos, identificadores, 1:N e N:N corretos</td></tr><tr><td>Normalização 1FN, 2FN e 3FN</td><td>3,0</td><td>Valores atômicos, dependências parciais e transitivas</td></tr><tr><td>Modelo relacional e integridade</td><td>2,0</td><td>7 tabelas, PKs, FKs e coerência do modelo</td></tr><tr><td>DDL MySQL e restrições</td><td>3,0</td><td>CREATE TABLE e uso correto de AUTO_INCREMENT, PK, FK, NOT NULL, UNIQUE, CHECK</td></tr><tr><td>INSERTs de exemplo</td><td>1,0</td><td>Dados de professor, laboratório, oficina e equipamento</td></tr><tr><td>SELECT com JOINs</td><td>2,0</td><td>Nome da oficina, professor, laboratório e equipamentos na mesma listagem</td></tr><tr><th>Total</th><th>15,0</th><th>Permitir crédito parcial por raciocínio correto, mesmo diante de erros sintáticos pontuais.</th></tr></tbody></table><div class="note"><b>Para a vista de prova:</b> avalie a coerência do raciocínio completo. Uma resposta pode estar conceitualmente correta no DER, mas incompleta no SQL, ou vice-versa.</div></section>
+<section class="section"><h2>9. Três perguntas para revisar com a turma</h2><div class="quiz"><b>1.</b> Por que a tabela <code>oficina_equipamento</code> utiliza duas chaves estrangeiras que juntas formam sua chave primária?</div><div class="quiz"><b>2.</b> O que acontece se o e-mail de um professor for armazenado em cada oficina e ele precisar alterá-lo?</div><div class="quiz"><b>3.</b> Por que a consulta final precisa de <code>GROUP_CONCAT</code> e <code>GROUP BY</code> para mostrar uma linha por oficina?</div><details><summary>Ver respostas comentadas</summary><div class="inside"><p><b>1.</b> A combinação representa um vínculo exclusivo, evitando repetições, e as FKs garantem que oficina e equipamento existam.</p><p><b>2.</b> Seriam necessárias várias atualizações, com risco de inconsistência — anomalia de atualização.</p><p><b>3.</b> Um JOIN com os equipamentos gera potencialmente várias linhas por oficina; o agrupamento reúne essas linhas e a função concatena as descrições apenas na apresentação.</p></div></details></section><p class="footer">Material didático de vista de prova · Questão 1 — LabConnect · Banco de Dados · HTML independente (funciona sem internet)</p></main>
+<script>function copySql(){const el=document.getElementById('sqlCode');navigator.clipboard.writeText(el.textContent).then(()=>{const b=document.getElementById('copyBtn');b.textContent='SQL copiado!';setTimeout(()=>b.textContent='Copiar SQL completo',2200)}).catch(()=>{const r=document.createRange();r.selectNodeContents(el);const s=window.getSelection();s.removeAllRanges();s.addRange(r);alert('Selecione e copie o SQL exibido.')})}</script></body></html>
